@@ -1,3 +1,6 @@
-name: codeql-workshop/python-sql-injection
-version: 0.0.0
-libraryPathDependencies: codeql-python
+---
+library: false
+name: hohn/codeql-dataflow-sql-injection-python
+version: 0.0.1
+dependencies:
+    codeql/python-all: "*"

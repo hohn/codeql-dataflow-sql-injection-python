@@ -16,8 +16,7 @@ predicate isSource1(DataFlow::Node source) {
     API::moduleImport("builtins").getMember("input").getACall() = source
 }
 
-
-predicate isSink(Call call, DataFlow::Node dfsink) {
+predicate isSink1(Call call, DataFlow::Node dfsink) {
     call.getFunc().(Attribute).getName() = "executescript" and
     dfsink.asExpr() = call.getArg(0)
 }
@@ -31,7 +30,7 @@ class SqliFlowConfig extends TaintTracking::Configuration {
 
     override predicate isAdditionalTaintStep(DataFlow::Node into, DataFlow::Node out) { none() }
 
-    override predicate isSink(DataFlow::Node sink) {isSink(_, sink) }
+    override predicate isSink(DataFlow::Node sink) {isSink1(_, sink) }
 }
 
 from SqliFlowConfig conf, DataFlow::PathNode source, DataFlow::PathNode sink

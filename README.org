@@ -47,16 +47,13 @@
    # Versions:
    # ~/local/db/python-sqli-6a5a10d
 
-** Queries
-   Written against v1.26.0 of the libraries, using v2.4.3 of the cli.  For
-   example, using 
+** CodeQL setup
+   These examples are written against v2.13.5 of the cli.  To set up the packages,
+   use
    #+BEGIN_SRC sh
-     cd ~/local/vmsync/ql
-     git checkout v1.26.0
+     codeql pack install
    #+END_SRC
-   you should add the =ql/= tree 
-   : ~/local/vmsync/ql
-   to the VS Code workspace.
+
 ** Reading Order
    The queries introduce CodeQL concepts and should be read bottom-up in this
    order:
@@ -65,7 +62,6 @@
    3. =TaintFlowTemplate.ql=: introduce the taint flow template
    4. =TaintFlow.ql=: taint flow with endpoints only
    5. =TaintFlowPath.ql=: taint flow with full path
-
 
 ** Note on the Python code
    The Python call 
