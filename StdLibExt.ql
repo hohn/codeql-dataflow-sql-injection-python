@@ -23,6 +23,8 @@ import semmle.python.ApiGraphs
 
 //
 // Extend FileSystemAccess::Range to include SqlExecution
+// XX: This works, but SqlExecution should be extended instead.
+//
 class SqlAccess extends FileSystemAccess::Range {
   Call call;
 
