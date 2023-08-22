@@ -21,33 +21,6 @@ import semmle.python.dataflow.new.RemoteFlowSources
 import semmle.python.Concepts
 import semmle.python.ApiGraphs
 
-//
-// Extend FileSystemAccess::Range to include SqlExecution
-class SqlAccess extends FileSystemAccess::Range {
-  Call call;
-
-  SqlAccess() {
-    // Include conn.executescript(query)
-    call.getFunc().(Attribute).getName() = "executescript" and
-    this.asExpr() = call.getArg(0)
-    // This is result 413 of 526; narrow things down further
-  }
-
-  override DataFlow::Node getAPathArgument() { result = this }
-}
-
-//
-// Include input()(?.strip()?) as RemoteFlowSource
-//
-class TerminalInput extends RemoteFlowSource::Range {
-  TerminalInput() {
-    // Include input().strip()
-    API::moduleImport("builtins").getMember("input").getACall() = this
-  }
-
-  override string getSourceType() { result = "terminal input" }
-}
-
 module RemoteToFileConfiguration implements DataFlow::ConfigSig {
   predicate isSource(DataFlow::Node source) { source instanceof RemoteFlowSource }
 
