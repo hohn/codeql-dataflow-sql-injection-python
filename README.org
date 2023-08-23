@@ -44,8 +44,6 @@
      codeql database create --language=python -s . -j 8 -v $DB
 
    #+END_SRC
-   # Versions:
-   # ~/local/db/python-sqli-6a5a10d
 
 ** CodeQL setup
    These examples are written against v2.13.5 of the cli.  To set up the packages,
