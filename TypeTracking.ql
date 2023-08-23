@@ -14,33 +14,33 @@ import semmle.python.dataflow.new.TypeTracker
 // Adapted to this repository's Python code.  
 // Find places where sqlite `Connection`s (from `sqlite3.connect`) ions are closed (via connection.close())
 // 
-DataFlow::TypeTrackingNode firebase(DataFlow::TypeTracker t) {
+DataFlow::TypeTrackingNode sqlite(DataFlow::TypeTracker t) {
   t.start() and
   result = API::moduleImport("sqlite3").getAValueReachableFromSource()
   or
-  exists(DataFlow::TypeTracker t2 | result = firebase(t2).track(t2, t))
+  exists(DataFlow::TypeTracker t2 | result = sqlite(t2).track(t2, t))
 }
 
-DataFlow::LocalSourceNode firebase() { result = firebase(DataFlow::TypeTracker::end()) }
+DataFlow::LocalSourceNode sqlite() { result = sqlite(DataFlow::TypeTracker::end()) }
 
-DataFlow::TypeTrackingNode firebaseConnect(DataFlow::TypeTracker t) {
+DataFlow::TypeTrackingNode sqliteConnect(DataFlow::TypeTracker t) {
   t.start() and
-  result = firebase().getAMethodCall("connect")
+  result = sqlite().getAMethodCall("connect")
   or
-  exists(DataFlow::TypeTracker t2 | result = firebase(t2).track(t2, t))
+  exists(DataFlow::TypeTracker t2 | result = sqlite(t2).track(t2, t))
 }
 
-DataFlow::LocalSourceNode firebaseConnect() { 
-  result = firebaseConnect(DataFlow::TypeTracker::end()) }
+DataFlow::LocalSourceNode sqliteConnect() { 
+  result = sqliteConnect(DataFlow::TypeTracker::end()) }
 
 // DataFlowPublic.MethodCallNode
 import semmle.python.dataflow.new.internal.DataFlowPublic
 
-MethodCallNode firebaseCloseCall() { result = firebaseConnect().getAMethodCall("close") }
+MethodCallNode sqliteCloseCall() { result = sqliteConnect().getAMethodCall("close") }
 
-select firebaseCloseCall()
+select sqliteCloseCall()
 
-
-// XX:
-// https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#tracking-associated-data
+// 
+// When to use type tracking:
 //
+// https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#when-to-use-type-tracking
