@@ -167,11 +167,16 @@
 ** Reading Order
    The queries introduce CodeQL concepts and should be read bottom-up in this
    order:
-   1. =source.ql=: introduces Value, ControlFlowNode and DataFlow::Node
-   2. =sink.ql=: introduces AstNode
-   3. =TaintFlowTemplate.ql=: introduce the taint flow template
-   4. =TaintFlow.ql=: taint flow with endpoints only
-   5. =TaintFlowPath.ql=: taint flow with full path
+   1. =source.ql=: introduces Value, ControlFlowNode and DataFlow::Node.
+   2. =sink.ql=: introduces AstNode.
+   3. =TaintFlowTemplate.ql=: introduce the taint flow template.
+   4. =TaintFlow.ql=: taint flow with endpoints only, using a class.  This is the
+      old way, but it still works and is a good introduction to /using/ classes --
+      not /writing/ them.
+   5. =TaintFlowPath.ql=: taint flow with full path.  Again, the old way.
+   6. =TaintFlowWithModule.ql=: taint flow with endpoints only, using modules.
+      The way forward.
+   7. =TaintFlowPathQueryWithModule.ql=: taint flow with full path, using modules.
 
 ** Note on the Python code
    The Python call 
@@ -191,18 +196,22 @@
   
 ** Dataflow in Python
    https://codeql.github.com/docs/codeql-language-guides/analyzing-data-flow-in-python/ 
-   - Codified in
-     #+BEGIN_SRC text
-       hohn@gh-hohn ~/local/codeql-dataflow-sql-injection-python
-       0:$ git st
-       On branch mh-scratch
-     #+END_SRC
-   - via 
-     - StdLibExt.ql
-     - StdLibPlain.ql
-     - misc.ql
-     - TaintFlowPathQueryWithModule.ql
-     - TaintFlowWithModule.ql
+
+   Using and extending the CodeQL standard library:
+   - StdLibPlain.ql
+     Illustrates using the CodeQL standard library's
+     : RemoteFlowSource 
+   - StdLibExt.ql
+     Illustrates extension of the CodeQL standard library via
+     : class SqlAccess extends FileSystemAccess::Range ...
+     and
+     : class TerminalInput extends RemoteFlowSource::Range ...
+
+   Various data flow / taint flow examples from the documentation, modified as
+   needed: 
+   - using-local-data-flow.ql
+   - using-local-sources.ql
+   - using-local-taint-tracking.ql
 
 ** API graphs
    https://codeql.github.com/docs/codeql-language-guides/using-api-graphs-in-python/
