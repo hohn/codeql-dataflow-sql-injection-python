@@ -1,55 +1,167 @@
 * SQL injection example
-** Setup and sample run
-   Execute the following in a bourne-style shell, one block at a time to see
-   results. 
+  The primary purpose of this material is to serve as an introduction to CodeQL
+  for Python.
+  The section [[*Reading Order][Reading Order]] describes the basic CodeQL queries to go through.
 
-  #+BEGIN_SRC sh
-    # Prepare db
-    ./admin -r
-    ./admin -c
-    ./admin -s 
+  The Python code is intentionally trivial and mirrors the structure of production
+  code.  Further, the steps needed for [[*CodeQL setup][CodeQL setup]] in production CI/CD pipelines
+  have identical structure to the one shown here.
 
-    # Add regular user
-    ./add-user.py 2>> log
-    First User
+  Thus, it is expedient to illustrate intermediate and advanced topics here as
+  well.  The section [[*Additional Topics][Additional Topics]] does this by illustrating descriptions from
+  the CodeQL documentation using the Python code in this repository.
+  Thus, the [[*Additional Topics][Additional Topics]] serve as additional examples to parts of the
+  documentation. 
+  These additional topics should be read in the order of appearance.
 
-    # Check
-    ./admin -s
-
-    # Add Johnny Droptable 
-    ./add-user.py 2>> log
-    Johnny'); DROP TABLE users; --
-
-    # See the problem:
-    ./admin -s
-
-    # Check the log
-    tail log
-  #+END_SRC
-
-** Build codeql database
-   #+BEGIN_SRC sh
-     #* Build the db with source commit id.
-     codeql --version
-     : CodeQL command-line toolchain release 2.13.5.
-
-     cd ~/local/codeql-dataflow-sql-injection-python
-
-     DB=./python-sqli-db-$(git rev-parse --short HEAD)
-
-     echo $DB
-     test -d "$DB" && rm -fR "$DB"
-     mkdir -p "$DB"
-
-     codeql database create --language=python -s . -j 8 -v $DB
-
-   #+END_SRC
+  For system administration and devops, the section [[*CodeQL setup][CodeQL setup]] provides a
+  rudimentary guide.
 
 ** CodeQL setup
-   These examples are written against v2.13.5 of the cli.  To set up the packages,
-   use
+   It's best to have a full development setup for CodeQL on your laptop/desktop.
+   This requires you to 
+   1. download VS Code
+
+   2. install the CodeQL extension.  Instructions on how to do that found here:
+      https://codeql.github.com/docs/codeql-for-visual-studio-code/setting-up-codeql-in-visual-studio-code/
+
+   3. install a CodeQL binary (containing CodeQL CLI) for whichever platform
+      you are on and unpack that
+
+      The binary for 2.13.5 is found here:
+      https://github.com/github/codeql-cli-binaries/releases/tag/v2.13.5
+
+      See script below.
+
+   4. (recommended for browsing) Install the codeql standard library matching the
+      binary version.  This is not needed to write or run queries anymore, but the
+      library has many examples and searching it is much easier after extracting
+      this archive:
+      https://github.com/github/codeql/releases/tag/codeql-cli%2Fv2.13.5
+
+      See script below.
+
+   5. clone this repository.
+      #+BEGIN_SRC sh :session shared :results output 
+        mkdir ~/local && cd ~/local && \
+            git clone https://github.com/hohn/codeql-dataflow-sql-injection-python.git
+      #+END_SRC
+
+   6. open the workspace directory in VS Code.  This should just be
+      #+BEGIN_SRC sh :session shared :results output 
+        cd ~/local/codeql-dataflow-sql-injection-python
+        code python-sqli.code-workspace
+      #+END_SRC
+
+   7. add the downloaded CodeQL CLI to the VS Code's search path.  Find the CodeQL
+      extension settings, then paste the full path to the CodeQL CLI into the
+      : Code QL > Cli: Executable Path 
+      field.
+
+   8. install the pack dependencies for the CLI.  In a shell, use
+       #+BEGIN_SRC sh
+         cd ~/local/codeql-dataflow-sql-injection-python
+         codeql pack install
+       #+END_SRC
+
+   9. install the pack dependencies VS Code.  Do this via
+      : command palette
+      and then select all listed by
+      : CodeQL: Install Pack Dependencies 
+
+      It will generate a =codeql-pack.lock.yml= file.
+
+   10. use the following to build a CodeQL database.
+       #+BEGIN_SRC sh
+         #* Build the db with source commit id.
+         codeql --version
+         : CodeQL command-line toolchain release 2.13.5.
+
+         cd ~/local/codeql-dataflow-sql-injection-python
+
+         DB=./python-sqli-db-$(git rev-parse --short HEAD)
+
+         echo $DB
+         test -d "$DB" && rm -fR "$DB"
+         mkdir -p "$DB"
+
+         codeql database create --language=python -s . -j 8 -v $DB
+       #+END_SRC
+
+   11. add the database to the editor.  To do this there is a widget on the left
+       side of editor that looks like QL and after selecting that, there is a
+       databases panel. There are options to select from archive or folder. Select
+       the "from folder" option and add the "database" folders you created above.
+
+   12. open the query =trivial.ql= and run it via
+       : right click > run query on selected database
+   
+   There are several ways to install the CodeQL binaries and libraries.  Here is a
+   shell script to do it one way
+
+   #+BEGIN_SRC sh :session shared :results output 
+     # grab -- retrieve and extract codeql cli and library
+     # Usage: grab version platform prefix
+     grab() {
+         version=$1; shift
+         platform=$1; shift
+         prefix=$1; shift
+         mkdir -p $prefix/codeql-$version &&
+             cd $prefix/codeql-$version || return
+
+         # Get cli
+         wget "https://github.com/github/codeql-cli-binaries/releases/download/$version/codeql-$platform.zip"
+         # Get lib
+         wget "https://github.com/github/codeql/archive/refs/tags/codeql-cli/$version.zip"
+         # Fix attributes
+         if [ `uname` = Darwin ] ; then
+             xattr -c *.zip
+         fi
+         # Extract
+         unzip -q codeql-$platform.zip
+         unzip -q $version.zip
+         # Rename library directory for VS Code
+         mv codeql-codeql-cli-$version/ ql
+         # remove archives?
+         # rm codeql-$platform.zip
+         # rm $version.zip
+     }    
+
+     # Try:
+     grab v2.13.5 osx64 $HOME/local/xefm
+
+     grab v2.13.5 linux64 $HOME/local/xefm
+
+     ls $HOME/local/xefm/codeql-v2.13.5/
+     : codeql/  codeql-osx64.zip  ql/  v2.13.5.zip
+   #+END_SRC
+
+** Sample Application Setup and Run
+   Execute the following in a bourne-style shell, one block at a time to see
+   results.  This requires a working Python installation and a POSIX shell.
+
    #+BEGIN_SRC sh
-     codeql pack install
+     # Prepare db
+     ./admin -r
+     ./admin -c
+     ./admin -s 
+
+     # Add regular user
+     ./add-user.py 2>> log
+     First User
+
+     # Check
+     ./admin -s
+
+     # Add Johnny Droptable 
+     ./add-user.py 2>> log
+     Johnny'); DROP TABLE users; --
+
+     # See the problem:
+     ./admin -s
+
+     # Check the log
+     tail log
    #+END_SRC
 
 ** Reading Order
@@ -72,3 +184,49 @@
    : conn.executescript
    
    For this tutorial, we use the multi-statement =executescript()= call.
+
+* Additional Topics
+  This repository and its source code are used to illustrate some additional
+  topics from the CodeQL Python documentation.
+  
+** Dataflow in Python
+   https://codeql.github.com/docs/codeql-language-guides/analyzing-data-flow-in-python/ 
+   - Codified in
+     #+BEGIN_SRC text
+       hohn@gh-hohn ~/local/codeql-dataflow-sql-injection-python
+       0:$ git st
+       On branch mh-scratch
+     #+END_SRC
+   - via 
+     - StdLibExt.ql
+     - StdLibPlain.ql
+     - misc.ql
+     - TaintFlowPathQueryWithModule.ql
+     - TaintFlowWithModule.ql
+
+** API graphs
+   https://codeql.github.com/docs/codeql-language-guides/using-api-graphs-in-python/
+
+   API graphs are a uniform interface for referring to functions, classes, and methods defined in external libraries.
+
+   ApiGraphs.ql
+
+** Type Tracking
+   Documentation for JavaScript, also applicable here:
+   https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#using-type-tracking-for-api-modeling
+
+   You can track data through an API by creating a model using the CodeQL
+   type-tracking library.  The type-tracking library makes it possible to track
+   values through properties and function calls.
+
+
+   sqlite-info.py  
+   TypeTracking.ql
+
+   The type-tracking library makes it possible to track values through properties
+   and function calls.  Here, we also track some associated data.  See
+   https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#tracking-associated-data
+   
+   TypeTrackingWithData.ql
+
+
