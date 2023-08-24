@@ -218,24 +218,26 @@
 
    API graphs are a uniform interface for referring to functions, classes, and methods defined in external libraries.
 
-   ApiGraphs.ql
+   - =ApiGraphs.ql=:  various sample queries
 
 ** Type Tracking
    Documentation for JavaScript, also applicable here:
    https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#using-type-tracking-for-api-modeling
 
-   You can track data through an API by creating a model using the CodeQL
-   type-tracking library.  The type-tracking library makes it possible to track
-   values through properties and function calls.
+   The files
+   - sqlite-info.py  
+   - TypeTracking.ql
+   use type tracking.  From the docs: You can track data through an API by
+   creating a model using the CodeQL type-tracking library.  The type-tracking
+   library makes it possible to track values through properties and function
+   calls.
 
-
-   sqlite-info.py  
-   TypeTracking.ql
-
-   The type-tracking library makes it possible to track values through properties
-   and function calls.  Here, we also track some associated data.  See
+   The file
+   - =TypeTrackingWithData.ql=
+   goes further.  From the docs: The type-tracking library makes it possible to
+   track values through properties and function calls.  Here, we also track some
+   associated data.  See
    https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#tracking-associated-data
    
-   TypeTrackingWithData.ql
 
 
