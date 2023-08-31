@@ -18,7 +18,7 @@ import python
 import semmle.python.dataflow.new.DataFlow
 import semmle.python.dataflow.new.TaintTracking
 import semmle.python.dataflow.new.RemoteFlowSources
-import semmle.python.Concepts
+import semmle.python.Concepts // look here for extension points
 import semmle.python.ApiGraphs
 
 //
