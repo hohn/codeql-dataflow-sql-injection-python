@@ -239,5 +239,8 @@
    associated data.  See
    https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#tracking-associated-data
    
+** Flow State
+   The query =TaintFlowPathQueryWithSanitizer.ql= illustrates using a flow-state
+   representing whether user input has been sanitized.
 
-
+   It introduces [[https://codeql.github.com/docs/ql-language-reference/types/#algebraic-datatypes][ADT]]s via the =newtype= declaration of =TInputSanitizationState=.
