@@ -2,5 +2,7 @@
 library: false
 name: hohn/codeql-dataflow-sql-injection-python
 version: 0.0.1
+# Install the python queries for browsing.  They are not needed for this example.
 dependencies:
     codeql/python-all: "*"
+    codeql/python-queries: "*"
