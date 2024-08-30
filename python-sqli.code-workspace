@@ -2,6 +2,16 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../.codeql/packages/codeql/python-all"
+		},
+		{
+			"path": "../../.codeql/packages/codeql/python-queries"
+		},
+		{
+			"name": "[python-sqli-db-06cea0e source archive]",
+			"uri": "codeql-zip-archive://0-85/Users/hohn/local/codeql-dataflow-sql-injection-python/python-sqli-db-06cea0e/src.zip"
 		}
 	],
 	"settings": {

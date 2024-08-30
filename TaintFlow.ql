@@ -2,7 +2,7 @@
  * @name SQLI Vulnerability
  * @description Using untrusted strings in a sql query allows sql injection attacks.
  * @kind 
- * @id python/SQLIVulnerable
+ * @id python.SQLIVulnerable
  * @problem.severity warning
  */
 

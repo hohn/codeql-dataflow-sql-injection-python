@@ -194,6 +194,19 @@
   This repository and its source code are used to illustrate some additional
   topics from the CodeQL Python documentation.
   
+** Running analysis from the command line
+   Use the following to run analysis manually.
+   #+BEGIN_SRC sh
+     cd ~/local/codeql-dataflow-sql-injection-python
+
+     DB=./python-sqli-db-$(git rev-parse --short HEAD)
+
+     codeql database analyze --format=sarif-latest --rerun \
+            --output StdLibExtPath.sarif \
+            -j8 \
+            -- $DB StdLibExtPath.ql
+   #+END_SRC
+   
 ** Dataflow in Python
    https://codeql.github.com/docs/codeql-language-guides/analyzing-data-flow-in-python/ 
 
