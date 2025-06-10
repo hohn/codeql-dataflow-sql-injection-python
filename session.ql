@@ -16,9 +16,26 @@ import semmle.python.ApiGraphs
 
 // sink
 //     conn.executescript(query)     # Unsafe, used for illustration
+//     ^^^^                      Attribute.getObject()
+//          ^^^^^^^^^^^^         Attribute.getName()
+//     ^^^^^^^^^^^^^^^^^         Attribute
+//                        ^^^^^
+//     ^^^^^^^^^^^^^^^^^^^^^^^^^  Call
+// from Call cl, Attribute at 
+// where cl.getAChildNode() = at 
+// and at.getName() = "executescript"
+// and at.getLocation().getFile().getBaseName() = "add-user.py"
+// select cl, at.getName()
+
+// f(x)
+// ^^^^ Call 
 from Call cl, Attribute at 
-where cl.getAChildNode() = at
-select cl, at.getName()
+where cl.getAChildNode() = at 
+and at.getName() = "executescript"
+and at.getLocation().getFile().getBaseName() = "add-user.py"
+select cl, at, at.getObject(), at.getName()
+
+
 
 // connect them
 
