@@ -42,13 +42,13 @@
       See script below.
 
    5. clone this repository.
-      #+BEGIN_SRC sh :session shared :results output 
+      #+BEGIN_SRC sh 
         mkdir ~/local && cd ~/local && \
             git clone https://github.com/hohn/codeql-dataflow-sql-injection-python.git
       #+END_SRC
 
    6. open the workspace directory in VS Code.  This should just be
-      #+BEGIN_SRC sh :session shared :results output 
+      #+BEGIN_SRC sh 
         cd ~/local/codeql-dataflow-sql-injection-python
         code python-sqli.code-workspace
       #+END_SRC
@@ -99,7 +99,7 @@
    There are several ways to install the CodeQL binaries and libraries.  Here is a
    shell script to do it one way
 
-   #+BEGIN_SRC sh :session shared :results output 
+   #+BEGIN_SRC sh 
      # grab -- retrieve and extract codeql cli and library
      # Usage: grab version platform prefix
      grab() {
@@ -229,7 +229,8 @@
 ** API graphs
    https://codeql.github.com/docs/codeql-language-guides/using-api-graphs-in-python/
 
-   API graphs are a uniform interface for referring to functions, classes, and methods defined in external libraries.
+   API graphs are a uniform interface for referring to functions, classes, and
+   methods defined in external libraries.
 
    - =ApiGraphs.ql=:  various sample queries
 
@@ -238,8 +239,8 @@
    https://codeql.github.com/docs/codeql-language-guides/using-type-tracking-for-api-modeling/#using-type-tracking-for-api-modeling
 
    The files
-   - sqlite-info.py  
-   - TypeTracking.ql
+   - =sqlite-info.py=
+   - =TypeTracking.ql=
    use type tracking.  From the docs: You can track data through an API by
    creating a model using the CodeQL type-tracking library.  The type-tracking
    library makes it possible to track values through properties and function

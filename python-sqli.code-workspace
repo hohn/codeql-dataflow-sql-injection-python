@@ -15,6 +15,7 @@
 		}
 	],
 	"settings": {
-		"git.ignoreLimitWarning": true
+        "git.ignoreLimitWarning": true,
+        "sarif-viewer.connectToGithubCodeScanning": "off"
 	}
 }
