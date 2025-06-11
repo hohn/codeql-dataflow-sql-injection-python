@@ -4,10 +4,19 @@ import semmle.python.ApiGraphs
 // source
 //     info = input().strip()
 //
-// from API::Node nd
-// where nd = API::moduleImport("builtins")
-// select nd, nd.getAMember(), nd.getMember("input")
+// from API::Node nd1
+// where nd1 = API::moduleImport("builtins").getMember("input")
+// select nd1
+
 // select API::moduleImport("builtins").getMember("input")
+class MySource extends API::Node {
+  MySource() { this = API::moduleImport("builtins").getMember("input") }
+
+  override string toString() { result = this.toString() }
+}
+from MySource src 
+select src
+
 // sink
 //     conn.executescript(query)     # Unsafe, used for illustration
 //     ^^^^                      Attribute.getObject()
@@ -32,9 +41,8 @@ class MySink extends Expr {
     this = cl.getPositionalArg(0)
   }
 }
-
-from MySink ms
-select ms
+// from MySink ms
+// select ms
 
 
 // connect them
