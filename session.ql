@@ -13,7 +13,6 @@ import semmle.python.ApiGraphs
 // select API::moduleImport("builtins").getMember("input")
 
 
-
 // sink
 //     conn.executescript(query)     # Unsafe, used for illustration
 //     ^^^^                      Attribute.getObject()
@@ -21,20 +20,12 @@ import semmle.python.ApiGraphs
 //     ^^^^^^^^^^^^^^^^^         Attribute
 //                        ^^^^^
 //     ^^^^^^^^^^^^^^^^^^^^^^^^^  Call
-// from Call cl, Attribute at 
-// where cl.getAChildNode() = at 
-// and at.getName() = "executescript"
-// and at.getLocation().getFile().getBaseName() = "add-user.py"
-// select cl, at.getName()
-
-// f(x)
-// ^^^^ Call 
-from Call cl, Attribute at 
+from Call cl, Attribute at, Expr query
 where cl.getAChildNode() = at 
 and at.getName() = "executescript"
 and at.getLocation().getFile().getBaseName() = "add-user.py"
-select cl, at, at.getObject(), at.getName()
-
+and query = cl.getPositionalArg(0)
+select cl, at.getName(), query
 
 
 // connect them
